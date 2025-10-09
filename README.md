@@ -1,4 +1,4 @@
-# Daily Briefing MVP
+# MorningBrief 
 
 A SaaS MVP that automatically generates personalized daily news briefings using ChatGPT-4o-mini via the OpenAI API.
 
