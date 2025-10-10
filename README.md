@@ -336,9 +336,6 @@ For production deployment, consider:
 4. Run tests: `python test_integration.py`
 5. Submit a pull request
 
-## 📄 License
-
-
 ## 🆘 Support
 
 If you encounter issues:
