@@ -27,11 +27,22 @@ def get_async_database_url():
 
     # Handle PostgreSQL for production (Render)
     elif db_url.startswith("postgres://"):
-        return db_url.replace("postgres://", "postgresql+asyncpg://")
+        # Try asyncpg first, fallback to psycopg2 if asyncpg not available
+        try:
+            import asyncpg
+            return db_url.replace("postgres://", "postgresql+asyncpg://")
+        except ImportError:
+            # Fallback to psycopg2 async (requires psycopg[asyncio])
+            return db_url.replace("postgres://", "postgresql+psycopg://")
 
     # Handle PostgreSQL with asyncpg
     elif db_url.startswith("postgresql://"):
-        return db_url.replace("postgresql://", "postgresql+asyncpg://")
+        try:
+            import asyncpg
+            return db_url.replace("postgresql://", "postgresql+asyncpg://")
+        except ImportError:
+            # Fallback to psycopg2 async
+            return db_url.replace("postgresql://", "postgresql+psycopg://")
 
     # Default case
     return db_url
