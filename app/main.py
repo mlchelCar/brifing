@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import init_database
 from app.routes.briefing import router as briefing_router
+from app.routes.telegram import router as telegram_router
 from app.services.scheduler import start_background_scheduler, stop_background_scheduler
 
 # Configure logging
@@ -60,6 +61,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(briefing_router, prefix="/api/v1", tags=["briefing"])
+app.include_router(telegram_router, prefix="/telegram", tags=["telegram"])
 
 @app.get("/")
 async def root():

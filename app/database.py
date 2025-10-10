@@ -5,7 +5,7 @@ from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from app.models import Base
+from app.models import Base, NewsArticle, TelegramUser
 from app.config import settings
 
 # Create async engine for FastAPI

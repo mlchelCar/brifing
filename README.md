@@ -41,6 +41,7 @@ daily_briefing/
 - Python 3.8+
 - OpenAI API key
 - News API key (from newsapi.org)
+- Telegram Bot Token (from @BotFather)
 
 ## 🛠️ Installation
 
@@ -70,15 +71,34 @@ daily_briefing/
    ```env
    OPENAI_API_KEY=your_openai_api_key_here
    NEWS_API_KEY=your_news_api_key_here
+   TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
    ```
 
 5. **Get API Keys:**
    - **OpenAI API Key**: Visit [OpenAI Platform](https://platform.openai.com/api-keys)
    - **News API Key**: Visit [NewsAPI.org](https://newsapi.org/register)
+   - **Telegram Bot Token**: Message [@BotFather](https://t.me/botfather) on Telegram
 
 ## 🚀 Quick Start
 
-### Option 1: Using Run Scripts (Recommended)
+### Option 1: Telegram Bot (Recommended)
+
+1. **Setup the Telegram bot:**
+   ```bash
+   python setup_telegram_bot.py
+   ```
+
+2. **Start the Telegram bot:**
+   ```bash
+   python run_telegram_bot.py
+   ```
+
+3. **Test your bot:**
+   - Open Telegram
+   - Search for your bot username
+   - Send `/start` command
+
+### Option 2: Web Interface
 
 1. **Start the backend:**
    ```bash
@@ -90,7 +110,7 @@ daily_briefing/
    python run_frontend.py
    ```
 
-### Option 2: Manual Start
+### Option 3: Manual Start
 
 1. **Start the FastAPI backend:**
    ```bash
@@ -102,6 +122,28 @@ daily_briefing/
    ```bash
    streamlit run frontend/app.py --server.port 8501
    ```
+
+## 🤖 Telegram Bot Features
+
+### Available Commands
+- `/start` - Start using MorningBrief
+- `/categories` - Select your news categories
+- `/briefing` - Get your daily briefing now
+- `/settings` - Manage your preferences
+- `/help` - Show help information
+- `/stop` - Stop receiving briefings
+
+### How It Works
+1. **Setup**: Users select their preferred news categories
+2. **Schedule**: Choose when to receive daily briefings
+3. **Delivery**: Get curated news summaries automatically
+4. **On-demand**: Request briefings anytime with `/briefing`
+
+### User Management
+- Automatic user registration on first interaction
+- Category preferences stored per user
+- Customizable delivery times
+- Active/inactive status tracking
 
 ## 🔧 Testing
 
@@ -187,11 +229,16 @@ Key environment variables in `.env`:
 # API Keys
 OPENAI_API_KEY=your_openai_api_key
 NEWS_API_KEY=your_news_api_key
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 
 # Application Settings
 APP_HOST=0.0.0.0
 APP_PORT=8000
 DEBUG=True
+
+# Telegram Settings (Optional)
+TELEGRAM_WEBHOOK_URL=https://your-domain.com/telegram/webhook
+TELEGRAM_WEBHOOK_SECRET=your_webhook_secret
 
 # Scheduler Settings
 DAILY_REFRESH_HOUR=6

@@ -86,7 +86,7 @@ const MorningBriefLanding = () => {
                 Get your daily brief before your coffee's ready
               </h1>
               <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-                Stop scrolling through endless feeds. Receive a concise, AI-curated summary of what matters — in just 2 minutes, every morning.
+                Stop scrolling through endless feeds. Receive a concise, curated summary of what matters — in just 2 minutes, every morning.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button 
@@ -118,7 +118,7 @@ const MorningBriefLanding = () => {
                   </div>
                   <div className="space-y-4">
                     {[
-                      { icon: '🚀', category: 'Tech', content: 'AI breakthrough in quantum computing shows 1000x speed improvement...' },
+                      { icon: '🚀', category: 'Tech', content: 'Breakthrough in quantum computing shows 1000x speed improvement...' },
                       { icon: '💼', category: 'Business', content: 'Major merger announced between two Fortune 500 companies...' },
                       { icon: '🌍', category: 'World', content: 'Climate summit reaches historic agreement on carbon reduction...' }
                     ].map((item, index) => (
@@ -150,7 +150,7 @@ const MorningBriefLanding = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               { icon: '⚙️', title: '1. Choose categories', description: 'Select the topics that matter to you: tech, business, world news, and more.' },
-              { icon: '🤖', title: '2. AI curates top stories', description: 'Our AI scans hundreds of sources and picks the most important stories for you.' },
+              { icon: '🤖', title: '2. Smart curation', description: 'Our system scans hundreds of sources and picks the most important stories for you.' },
               { icon: '📱', title: '3. Receive your brief', description: 'Get a concise summary delivered to your phone every morning at 7 AM.' }
             ].map((step, index) => (
               <div key={index} className="text-center fade-in">
@@ -177,7 +177,7 @@ const MorningBriefLanding = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               { icon: '⏰', bgColor: 'bg-green-100', title: 'Save time', description: 'Get key info in just 2 minutes instead of scrolling for hours through social feeds.' },
-              { icon: '🎯', bgColor: 'bg-blue-100', title: 'Stay informed', description: 'AI-curated from top sources ensures you never miss what actually matters.' },
+              { icon: '🎯', bgColor: 'bg-blue-100', title: 'Stay informed', description: 'Curated from top sources ensures you never miss what actually matters.' },
               { icon: '🚀', bgColor: 'bg-purple-100', title: 'Boost productivity', description: 'Start your day smarter with context and insights that help you make better decisions.' }
             ].map((benefit, index) => (
               <div key={index} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 fade-in">
@@ -301,7 +301,7 @@ const MorningBriefLanding = () => {
                 {[
                   'Daily briefings on Telegram',
                   '5 news categories',
-                  'AI-curated content',
+                  'Curated content',
                   '2-minute read time'
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center">

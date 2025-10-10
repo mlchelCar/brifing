@@ -17,7 +17,12 @@ class Settings:
     # News API Configuration
     NEWS_API_KEY: str = os.getenv("NEWS_API_KEY", "")
     NEWS_API_URL: str = os.getenv("NEWS_API_URL", "https://newsapi.org/v2/everything")
-    
+
+    # Telegram Bot Configuration
+    TELEGRAM_BOT_TOKEN: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
+    TELEGRAM_WEBHOOK_URL: str = os.getenv("TELEGRAM_WEBHOOK_URL", "")
+    TELEGRAM_WEBHOOK_SECRET: str = os.getenv("TELEGRAM_WEBHOOK_SECRET", "")
+
     # Database Configuration
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./daily_briefing.db")
     
@@ -64,7 +69,8 @@ class Settings:
         """Validate that required settings are present."""
         required_settings = [
             self.OPENAI_API_KEY,
-            self.NEWS_API_KEY
+            self.NEWS_API_KEY,
+            self.TELEGRAM_BOT_TOKEN
         ]
         return all(setting for setting in required_settings)
 

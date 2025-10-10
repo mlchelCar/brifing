@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean
+from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, BigInteger, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 from typing import List
@@ -23,6 +23,27 @@ class NewsArticle(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     is_active = Column(Boolean, default=True)
+
+
+class TelegramUser(Base):
+    """SQLAlchemy model for Telegram users."""
+
+    __tablename__ = "telegram_users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    telegram_id = Column(BigInteger, nullable=False, unique=True, index=True)
+    username = Column(String(100), nullable=True)
+    first_name = Column(String(100), nullable=True)
+    last_name = Column(String(100), nullable=True)
+    language_code = Column(String(10), nullable=True)
+    is_active = Column(Boolean, default=True)
+    selected_categories = Column(JSON, nullable=True)  # List of selected categories
+    daily_time = Column(String(10), nullable=True)  # Time for daily briefing (HH:MM format)
+    timezone = Column(String(50), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    last_interaction = Column(DateTime, default=datetime.utcnow)
+
 
 # Pydantic models for API requests/responses
 
