@@ -10,7 +10,7 @@ from telegram.ext import (
     ContextTypes, filters
 )
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update
+from sqlalchemy import select, update as sql_update
 from app.config import settings
 from app.database import AsyncSessionLocal
 from app.models import TelegramUser, NewsArticle
@@ -189,7 +189,7 @@ class TelegramBotService:
         
         async with AsyncSessionLocal() as session:
             await session.execute(
-                update(TelegramUser)
+                sql_update(TelegramUser)
                 .where(TelegramUser.telegram_id == user_id)
                 .values(is_active=False)
             )
@@ -223,7 +223,7 @@ class TelegramBotService:
                     categories.append(category)
                 
                 await session.execute(
-                    update(TelegramUser)
+                    sql_update(TelegramUser)
                     .where(TelegramUser.telegram_id == user_id)
                     .values(selected_categories=categories)
                 )
@@ -254,7 +254,7 @@ class TelegramBotService:
         
         async with AsyncSessionLocal() as session:
             await session.execute(
-                update(TelegramUser)
+                sql_update(TelegramUser)
                 .where(TelegramUser.telegram_id == user_id)
                 .values(daily_time=time_str)
             )
@@ -295,7 +295,7 @@ class TelegramBotService:
             user_id = update.effective_user.id
             async with AsyncSessionLocal() as session:
                 await session.execute(
-                    update(TelegramUser)
+                    sql_update(TelegramUser)
                     .where(TelegramUser.telegram_id == user_id)
                     .values(is_active=False)
                 )
@@ -327,7 +327,7 @@ class TelegramBotService:
             if existing_user:
                 # Update existing user
                 await session.execute(
-                    update(TelegramUser)
+                    sql_update(TelegramUser)
                     .where(TelegramUser.telegram_id == user.id)
                     .values(
                         username=user.username,
