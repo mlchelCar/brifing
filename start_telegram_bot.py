@@ -52,7 +52,7 @@ async def main():
         
         # Import and run the bot (after database is ready)
         logger.info("🤖 Starting Telegram bot...")
-        from run_telegram_bot import main as run_bot
+        from run_telegram_bot import run_bot
         await run_bot()
         
     except Exception as e:
