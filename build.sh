@@ -33,7 +33,7 @@ pip install openai==1.3.5
 pip install requests==2.31.0
 pip install python-dotenv==1.0.0
 pip install apscheduler==3.10.4
-pip install sqlalchemy==2.0.23
+pip install sqlalchemy==2.0.35
 pip install aiosqlite==0.19.0
 
 # Install asyncpg with Python 3.13 compatible version
