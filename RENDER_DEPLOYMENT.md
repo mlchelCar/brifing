@@ -31,7 +31,8 @@ This guide will help you deploy your MorningBrief application to Render with bot
 3. Configure:
    - **Name**: `morningbrief-web`
    - **Environment**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
+   - **Runtime**: `python-3.12.7`
+   - **Build Command**: `chmod +x build.sh && ./build.sh`
    - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
    - **Plan**: Free (or paid for production)
 
@@ -52,7 +53,8 @@ ENVIRONMENT=production
 3. Configure:
    - **Name**: `morningbrief-telegram-bot`
    - **Environment**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
+   - **Runtime**: `python-3.12.7`
+   - **Build Command**: `chmod +x build.sh && ./build.sh`
    - **Start Command**: `python start_telegram_bot.py`
    - **Plan**: Free (or paid for production)
 
@@ -110,25 +112,35 @@ The database will be automatically initialized when the Telegram bot starts. The
 
 ### Common Issues:
 
-1. **Database Connection Errors**:
+1. **Build Failures (Python/Rust compilation)**:
+   - **Error**: `pydantic-core` compilation fails with Rust errors
+   - **Solution**: Use the provided `build.sh` script which handles fallbacks
+   - **Alternative**: Manually set build command to `chmod +x build.sh && ./build.sh`
+
+2. **Python Version Issues**:
+   - **Error**: Incompatibility with Python 3.13+
+   - **Solution**: Use `runtime.txt` with `python-3.12.7` (already included)
+   - **Alternative**: Specify runtime in Render dashboard
+
+3. **Database Connection Errors**:
    - Verify DATABASE_URL is correct
    - Check PostgreSQL service is running
    - Ensure asyncpg is installed
 
-2. **Bot Not Responding**:
+4. **Bot Not Responding**:
    - Verify TELEGRAM_BOT_TOKEN is correct
    - Check bot service logs
    - Ensure bot is not running elsewhere
 
-3. **API Errors**:
+5. **API Errors**:
    - Verify all API keys are set
    - Check API key permissions
    - Monitor rate limits
 
-4. **Build Failures**:
-   - Check requirements.txt is complete
-   - Verify Python version compatibility
-   - Check for missing dependencies
+6. **Dependency Installation Failures**:
+   - Use `requirements-render.txt` for optimized dependencies
+   - Check for binary wheel availability
+   - Consider downgrading problematic packages
 
 ### Log Commands:
 ```bash

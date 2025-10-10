@@ -4,7 +4,8 @@ services:
     name: morningbrief-web
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt
+    runtime: python-3.12.7
+    buildCommand: chmod +x build.sh && ./build.sh
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
@@ -29,7 +30,8 @@ services:
     name: morningbrief-telegram-bot
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt
+    runtime: python-3.12.7
+    buildCommand: chmod +x build.sh && ./build.sh
     startCommand: python start_telegram_bot.py
     envVars:
       - key: PYTHON_VERSION
