@@ -81,4 +81,8 @@ pip install httpx==0.25.2
 pip install python-multipart==0.0.6
 pip install python-telegram-bot==20.7
 
+# Install greenlet for SQLAlchemy async support
+echo "📦 Installing greenlet for async support..."
+pip install greenlet==3.1.1
+
 echo "🎉 Build completed successfully!"
