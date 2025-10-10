@@ -1,4 +1,12 @@
-"""Telegram bot service for MorningBrief."""
+"""
+MorningBrief - News Briefing Application
+Copyright (c) 2025 Michel Car. All rights reserved.
+
+This software is proprietary and confidential. Unauthorized use, reproduction,
+or distribution is strictly prohibited.
+
+Telegram bot service for MorningBrief.
+"""
 
 import asyncio
 import logging

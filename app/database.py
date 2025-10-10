@@ -1,4 +1,12 @@
-"""Database connection and session management."""
+"""
+MorningBrief - News Briefing Application
+Copyright (c) 2025 Michel Car. All rights reserved.
+
+This software is proprietary and confidential. Unauthorized use, reproduction,
+or distribution is strictly prohibited.
+
+Database connection and session management.
+"""
 
 import asyncio
 from typing import AsyncGenerator

@@ -1,6 +1,10 @@
-# MorningBrief 
+# MorningBrief
+
+**Copyright (c) 2025 Michel Car. All rights reserved.**
 
 A SaaS MVP that automatically generates personalized daily news briefings using ChatGPT-4o-mini via the OpenAI API.
+
+> **⚠️ PROPRIETARY SOFTWARE**: This is commercial software protected by copyright. See [LICENSE](LICENSE) for terms.
 
 ## 🚀 Features
 
@@ -343,6 +347,23 @@ If you encounter issues:
 3. Check the logs for error messages
 4. Ensure all API keys are correctly configured
 
+## 📄 License
+
+**PROPRIETARY SOFTWARE - ALL RIGHTS RESERVED**
+
+This software is the exclusive property of Michel Car and is protected by copyright laws and international copyright treaties.
+
+- **Commercial License Required**: Any commercial use requires a separate license agreement
+- **No Redistribution**: You may not copy, modify, distribute, or create derivative works
+- **Personal Use Only**: Limited to personal or internal business use only
+- **Full Ownership**: Michel Car retains all intellectual property rights
+
+For commercial licensing inquiries, please contact the owner.
+
+See the [LICENSE](LICENSE) file for complete terms and conditions.
+
 ---
 
 **Built with ❤️ using FastAPI, Streamlit, and ChatGPT-4o-mini**
+
+Copyright (c) 2025 Michel Car. All rights reserved.

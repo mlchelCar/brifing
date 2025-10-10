@@ -117,3 +117,9 @@ node_modules/
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+
+# IMPORTANT: License and copyright files must ALWAYS be included
+# Do not ignore LICENSE, COPYRIGHT, or similar legal files
+!LICENSE
+!COPYRIGHT
+!NOTICE

@@ -1,4 +1,12 @@
-"""Database models for the Daily Briefing application."""
+"""
+MorningBrief - News Briefing Application
+Copyright (c) 2025 Michel Car. All rights reserved.
+
+This software is proprietary and confidential. Unauthorized use, reproduction,
+or distribution is strictly prohibited.
+
+Database models for the Daily Briefing application.
+"""
 
 from datetime import datetime
 from typing import Optional
