@@ -12,10 +12,16 @@ echo "🐍 Python version: $(python --version)"
 echo "📦 Upgrading pip..."
 pip install --upgrade pip
 
+# Install greenlet first (critical for SQLAlchemy async)
+echo "📦 Installing greenlet (critical for async operations)..."
+pip install greenlet==3.1.1
+
 # Try Python 3.13 specific requirements first
 echo "📦 Trying Python 3.13 compatible requirements..."
 if pip install -r requirements-py313.txt; then
     echo "✅ Successfully installed from requirements-py313.txt"
+    # Ensure greenlet is installed even if requirements succeeded
+    pip install greenlet==3.1.1
     echo "🎉 Build completed successfully!"
     exit 0
 fi
@@ -24,6 +30,9 @@ echo "⚠️ Python 3.13 requirements failed, trying individual installation..."
 
 # Install packages individually with Python 3.13 compatible versions
 echo "📦 Installing packages with Python 3.13 compatibility..."
+
+# Install greenlet first (critical for SQLAlchemy async)
+pip install greenlet==3.1.1
 
 # Core packages first
 pip install fastapi==0.104.1
@@ -80,9 +89,5 @@ fi
 pip install httpx==0.25.2
 pip install python-multipart==0.0.6
 pip install python-telegram-bot==20.7
-
-# Install greenlet for SQLAlchemy async support
-echo "📦 Installing greenlet for async support..."
-pip install greenlet==3.1.1
 
 echo "🎉 Build completed successfully!"
