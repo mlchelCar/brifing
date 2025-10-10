@@ -53,20 +53,44 @@ def get_async_database_url():
     # Default case
     return db_url
 
-async_engine = create_async_engine(
-    get_async_database_url(),
-    echo=settings.DEBUG,
-    future=True,
-    pool_pre_ping=True,  # Verify connections before use
-    pool_recycle=300     # Recycle connections every 5 minutes
-)
+# Defer engine creation to avoid import errors at module level
+async_engine = None
 
-# Create async session factory
-AsyncSessionLocal = async_sessionmaker(
-    async_engine,
-    class_=AsyncSession,
-    expire_on_commit=False
-)
+def get_async_engine():
+    """Get or create the async engine."""
+    global async_engine
+    if async_engine is None:
+        try:
+            async_engine = create_async_engine(
+                get_async_database_url(),
+                echo=settings.DEBUG,
+                future=True,
+                pool_pre_ping=True,  # Verify connections before use
+                pool_recycle=300     # Recycle connections every 5 minutes
+            )
+        except Exception as e:
+            print(f"⚠️ Failed to create async engine: {e}")
+            # Fallback to SQLite
+            async_engine = create_async_engine(
+                "sqlite+aiosqlite:///./daily_briefing.db",
+                echo=settings.DEBUG,
+                future=True
+            )
+    return async_engine
+
+# Create async session factory (deferred)
+AsyncSessionLocal = None
+
+def get_async_session_factory():
+    """Get or create the async session factory."""
+    global AsyncSessionLocal
+    if AsyncSessionLocal is None:
+        AsyncSessionLocal = async_sessionmaker(
+            get_async_engine(),
+            class_=AsyncSession,
+            expire_on_commit=False
+        )
+    return AsyncSessionLocal
 
 # Create sync engine for scheduler and other sync operations
 def get_sync_database_url():
@@ -86,33 +110,60 @@ def get_sync_database_url():
     # Default case (SQLite and PostgreSQL)
     return db_url
 
-sync_engine = create_engine(
-    get_sync_database_url(),
-    echo=settings.DEBUG,
-    future=True,
-    pool_pre_ping=True,  # Verify connections before use
-    pool_recycle=300     # Recycle connections every 5 minutes
-)
+# Defer sync engine creation to avoid import errors at module level
+sync_engine = None
 
-# Create sync session factory
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=sync_engine
-)
+def get_sync_engine():
+    """Get or create the sync engine."""
+    global sync_engine
+    if sync_engine is None:
+        try:
+            sync_engine = create_engine(
+                get_sync_database_url(),
+                echo=settings.DEBUG,
+                future=True,
+                pool_pre_ping=True,  # Verify connections before use
+                pool_recycle=300     # Recycle connections every 5 minutes
+            )
+        except Exception as e:
+            print(f"⚠️ Failed to create sync engine: {e}")
+            # Fallback to SQLite
+            sync_engine = create_engine(
+                "sqlite:///./daily_briefing.db",
+                echo=settings.DEBUG,
+                future=True
+            )
+    return sync_engine
+
+# Create sync session factory (deferred)
+SessionLocal = None
+
+def get_sync_session_factory():
+    """Get or create the sync session factory."""
+    global SessionLocal
+    if SessionLocal is None:
+        SessionLocal = sessionmaker(
+            autocommit=False,
+            autoflush=False,
+            bind=get_sync_engine()
+        )
+    return SessionLocal
 
 async def create_tables():
     """Create database tables."""
-    async with async_engine.begin() as conn:
+    engine = get_async_engine()
+    async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
 def create_tables_sync():
     """Create database tables synchronously."""
-    Base.metadata.create_all(bind=sync_engine)
+    engine = get_sync_engine()
+    Base.metadata.create_all(bind=engine)
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     """Dependency to get async database session."""
-    async with AsyncSessionLocal() as session:
+    session_factory = get_async_session_factory()
+    async with session_factory() as session:
         try:
             yield session
         finally:

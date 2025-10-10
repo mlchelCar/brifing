@@ -54,9 +54,16 @@ else
     fi
 fi
 
-# Install psycopg2-binary (this usually works)
+# Install psycopg2-binary with Python 3.13 compatibility
 echo "📦 Installing psycopg2-binary..."
-pip install psycopg2-binary==2.9.9
+if pip install --only-binary=all psycopg2-binary==2.9.10; then
+    echo "✅ Successfully installed psycopg2-binary 2.9.10"
+elif pip install --only-binary=all psycopg2-binary==2.9.9; then
+    echo "✅ Successfully installed psycopg2-binary 2.9.9"
+else
+    echo "⚠️ psycopg2-binary failed, trying psycopg3 as alternative..."
+    pip install "psycopg[binary]==3.1.18"
+fi
 
 # Install pydantic with compatible version
 echo "📦 Installing pydantic..."
