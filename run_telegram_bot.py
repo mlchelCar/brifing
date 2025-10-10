@@ -4,6 +4,7 @@ import asyncio
 import logging
 import sys
 import os
+import signal
 from datetime import datetime
 
 # Add the app directory to the Python path
@@ -21,49 +22,81 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-async def main():
-    """Main function to run the Telegram bot."""
+async def setup_bot():
+    """Setup the bot and dependencies."""
     logger.info("🤖 Starting MorningBrief Telegram Bot...")
-    
+
     # Validate settings
     if not settings.validate_settings():
         logger.error("❌ Invalid configuration. Please check your environment variables.")
         logger.error("Required: OPENAI_API_KEY, NEWS_API_KEY, TELEGRAM_BOT_TOKEN")
-        return
-    
+        return False
+
     try:
         # Initialize database
         logger.info("📊 Initializing database...")
         await init_database()
-        
+
         # Initialize bot
         logger.info("🤖 Initializing Telegram bot...")
         if not await telegram_bot_service.initialize():
             logger.error("❌ Failed to initialize Telegram bot")
-            return
-        
+            return False
+
         # Start background scheduler for news updates
         logger.info("⏰ Starting background scheduler...")
         await start_background_scheduler()
-        
+
         logger.info("✅ MorningBrief Telegram Bot is ready!")
         logger.info(f"   Bot Token: {settings.TELEGRAM_BOT_TOKEN[:10]}...")
         logger.info("   Press Ctrl+C to stop the bot")
         logger.info("-" * 50)
-        
+
+        return True
+
+    except Exception as e:
+        logger.error(f"❌ Setup failed: {e}")
+        return False
+
+async def run_bot():
+    """Run the bot with proper async handling."""
+    try:
+        # Setup bot
+        setup_success = await setup_bot()
+        if not setup_success:
+            return
+
         # Start bot polling
-        await telegram_bot_service.start_polling()
-        
+        logger.info("🚀 Starting bot polling...")
+        logger.info("✅ Bot is now running and listening for messages...")
+        logger.info("📱 Send /start to your bot to test it!")
+
+        # Start polling - this will run until interrupted
+        async with telegram_bot_service.application:
+            await telegram_bot_service.application.start()
+            await telegram_bot_service.application.updater.start_polling(drop_pending_updates=True)
+
+            # Keep running until interrupted
+            try:
+                # This will run forever until KeyboardInterrupt
+                await asyncio.Event().wait()
+            except asyncio.CancelledError:
+                pass
+
     except KeyboardInterrupt:
         logger.info("🛑 Received interrupt signal")
     except Exception as e:
         logger.error(f"❌ Error running bot: {e}")
     finally:
         logger.info("🔄 Shutting down...")
-        await telegram_bot_service.stop()
+        logger.info("👋 MorningBrief Telegram Bot stopped")
+
+def main():
+    """Main entry point."""
+    try:
+        asyncio.run(run_bot())
+    except KeyboardInterrupt:
+        logger.info("👋 Bot stopped by user")
 
 if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        logger.info("👋 MorningBrief Telegram Bot stopped")
+    main()

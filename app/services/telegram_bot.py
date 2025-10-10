@@ -80,27 +80,19 @@ class TelegramBotService:
         
         await self.application.bot.set_my_commands(commands)
     
-    async def start_polling(self):
-        """Start the bot with polling."""
-        if not self.application:
-            logger.error("Bot not initialized")
-            return
-            
-        try:
-            self.is_running = True
-            logger.info("Starting Telegram bot polling...")
-            await self.application.run_polling(drop_pending_updates=True)
-        except Exception as e:
-            logger.error(f"Error running bot: {e}")
-        finally:
-            self.is_running = False
-    
     async def stop(self):
-        """Stop the bot."""
-        if self.application and self.is_running:
+        """Stop the bot gracefully."""
+        if self.application:
             logger.info("Stopping Telegram bot...")
-            await self.application.stop()
-            self.is_running = False
+            try:
+                await self.application.stop()
+                await self.application.shutdown()
+                logger.info("✅ Bot stopped successfully")
+            except Exception as e:
+                logger.error(f"Error stopping bot: {e}")
+            finally:
+                self.application = None
+                self.is_running = False
     
     async def _start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Handle /start command."""
