@@ -21,6 +21,12 @@ def get_async_database_url():
     """Get the appropriate async database URL for the environment."""
     db_url = settings.DATABASE_URL
 
+    # Handle missing DATABASE_URL
+    if not db_url or db_url.strip() == "":
+        # Default to SQLite for development/testing
+        db_url = "sqlite:///./daily_briefing.db"
+        print(f"⚠️ DATABASE_URL not set, using default SQLite: {db_url}")
+
     # Handle SQLite for development
     if db_url.startswith("sqlite://"):
         return db_url.replace("sqlite://", "sqlite+aiosqlite://")
@@ -66,6 +72,12 @@ AsyncSessionLocal = async_sessionmaker(
 def get_sync_database_url():
     """Get the appropriate sync database URL for the environment."""
     db_url = settings.DATABASE_URL
+
+    # Handle missing DATABASE_URL
+    if not db_url or db_url.strip() == "":
+        # Default to SQLite for development/testing
+        db_url = "sqlite:///./daily_briefing.db"
+        print(f"⚠️ DATABASE_URL not set, using default SQLite: {db_url}")
 
     # Handle PostgreSQL for production (Render)
     if db_url.startswith("postgres://"):
