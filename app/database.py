@@ -9,10 +9,31 @@ from app.models import Base, NewsArticle, TelegramUser
 from app.config import settings
 
 # Create async engine for FastAPI
+def get_async_database_url():
+    """Get the appropriate async database URL for the environment."""
+    db_url = settings.DATABASE_URL
+
+    # Handle SQLite for development
+    if db_url.startswith("sqlite://"):
+        return db_url.replace("sqlite://", "sqlite+aiosqlite://")
+
+    # Handle PostgreSQL for production (Render)
+    elif db_url.startswith("postgres://"):
+        return db_url.replace("postgres://", "postgresql+asyncpg://")
+
+    # Handle PostgreSQL with asyncpg
+    elif db_url.startswith("postgresql://"):
+        return db_url.replace("postgresql://", "postgresql+asyncpg://")
+
+    # Default case
+    return db_url
+
 async_engine = create_async_engine(
-    settings.DATABASE_URL.replace("sqlite://", "sqlite+aiosqlite://"),
+    get_async_database_url(),
     echo=settings.DEBUG,
-    future=True
+    future=True,
+    pool_pre_ping=True,  # Verify connections before use
+    pool_recycle=300     # Recycle connections every 5 minutes
 )
 
 # Create async session factory
@@ -23,10 +44,23 @@ AsyncSessionLocal = async_sessionmaker(
 )
 
 # Create sync engine for scheduler and other sync operations
+def get_sync_database_url():
+    """Get the appropriate sync database URL for the environment."""
+    db_url = settings.DATABASE_URL
+
+    # Handle PostgreSQL for production (Render)
+    if db_url.startswith("postgres://"):
+        return db_url.replace("postgres://", "postgresql://")
+
+    # Default case (SQLite and PostgreSQL)
+    return db_url
+
 sync_engine = create_engine(
-    settings.DATABASE_URL,
+    get_sync_database_url(),
     echo=settings.DEBUG,
-    future=True
+    future=True,
+    pool_pre_ping=True,  # Verify connections before use
+    pool_recycle=300     # Recycle connections every 5 minutes
 )
 
 # Create sync session factory

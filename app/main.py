@@ -76,11 +76,31 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Health check endpoint."""
-    return {
-        "status": "healthy",
-        "timestamp": "2024-01-01T00:00:00Z",
-        "version": "1.0.0"
-    }
+    from datetime import datetime
+    from app.database import async_engine
+
+    try:
+        # Test database connection
+        async with async_engine.begin() as conn:
+            await conn.execute("SELECT 1")
+
+        return {
+            "status": "healthy",
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "version": "1.0.0",
+            "database": "connected",
+            "environment": settings.ENVIRONMENT
+        }
+    except Exception as e:
+        logger.error(f"Health check failed: {e}")
+        return {
+            "status": "unhealthy",
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "version": "1.0.0",
+            "database": "disconnected",
+            "error": str(e),
+            "environment": settings.ENVIRONMENT
+        }
 
 if __name__ == "__main__":
     import uvicorn
