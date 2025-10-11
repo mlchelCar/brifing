@@ -20,7 +20,7 @@ from telegram.ext import (
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update as sql_update
 from app.config import settings
-from app.database import AsyncSessionLocal
+from app.database import get_async_session
 from app.models import TelegramUser, NewsArticle
 from app.services.summarizer import summarizer_service
 
@@ -167,7 +167,7 @@ class TelegramBotService:
         user_id = update.effective_user.id
         
         # Get user's selected categories
-        async with AsyncSessionLocal() as session:
+        async with get_async_session() as session:
             result = await session.execute(
                 select(TelegramUser).where(TelegramUser.telegram_id == user_id)
             )
@@ -209,7 +209,7 @@ class TelegramBotService:
         """Handle /stop command."""
         user_id = update.effective_user.id
         
-        async with AsyncSessionLocal() as session:
+        async with get_async_session() as session:
             await session.execute(
                 sql_update(TelegramUser)
                 .where(TelegramUser.telegram_id == user_id)
@@ -231,7 +231,7 @@ class TelegramBotService:
         user_id = update.effective_user.id
         
         # Toggle category selection
-        async with AsyncSessionLocal() as session:
+        async with get_async_session() as session:
             result = await session.execute(
                 select(TelegramUser).where(TelegramUser.telegram_id == user_id)
             )
@@ -274,7 +274,7 @@ class TelegramBotService:
         time_str = query.data.replace("time_", "")
         user_id = update.effective_user.id
         
-        async with AsyncSessionLocal() as session:
+        async with get_async_session() as session:
             await session.execute(
                 sql_update(TelegramUser)
                 .where(TelegramUser.telegram_id == user_id)
@@ -315,7 +315,7 @@ class TelegramBotService:
             )
         elif action == "stop":
             user_id = update.effective_user.id
-            async with AsyncSessionLocal() as session:
+            async with get_async_session() as session:
                 await session.execute(
                     sql_update(TelegramUser)
                     .where(TelegramUser.telegram_id == user_id)
@@ -339,7 +339,7 @@ class TelegramBotService:
 
     async def _save_user(self, user):
         """Save or update user in database."""
-        async with AsyncSessionLocal() as session:
+        async with get_async_session() as session:
             # Check if user exists
             result = await session.execute(
                 select(TelegramUser).where(TelegramUser.telegram_id == user.id)
@@ -415,7 +415,7 @@ class TelegramBotService:
     async def _generate_briefing(self, categories: List[str]) -> Optional[str]:
         """Generate a briefing for the given categories."""
         try:
-            async with AsyncSessionLocal() as session:
+            async with get_async_session() as session:
                 # Get recent articles for selected categories
                 result = await session.execute(
                     select(NewsArticle)
