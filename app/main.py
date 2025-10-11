@@ -12,6 +12,8 @@ import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from app.config import settings
 from app.database import init_database
 from app.routes.briefing import router as briefing_router
@@ -73,7 +75,12 @@ app.include_router(telegram_router, prefix="/telegram", tags=["telegram"])
 
 @app.get("/")
 async def root():
-    """Root endpoint."""
+    """Serve the landing page."""
+    return FileResponse("landing_page.html")
+
+@app.get("/api")
+async def api_root():
+    """API root endpoint."""
     return {
         "message": "Daily Briefing API",
         "version": "1.0.0",
