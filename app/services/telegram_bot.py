@@ -39,22 +39,27 @@ class TelegramBotService:
         if not settings.TELEGRAM_BOT_TOKEN:
             logger.error("TELEGRAM_BOT_TOKEN not configured")
             return False
-            
+
         try:
-            # Create application
-            self.application = Application.builder().token(settings.TELEGRAM_BOT_TOKEN).build()
-            
+            logger.info("Creating Telegram application...")
+            # Create application with proper configuration
+            self.application = (
+                Application.builder()
+                .token(settings.TELEGRAM_BOT_TOKEN)
+                .build()
+            )
+
+            logger.info("Setting up handlers...")
             # Add handlers
             await self._setup_handlers()
-            
-            # Set bot commands
-            await self._setup_commands()
-            
+
             logger.info("Telegram bot initialized successfully")
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to initialize Telegram bot: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     async def _setup_handlers(self):
@@ -77,16 +82,24 @@ class TelegramBotService:
     
     async def _setup_commands(self):
         """Setup bot commands menu."""
-        commands = [
-            BotCommand("start", "Start using MorningBrief"),
-            BotCommand("categories", "Select news categories"),
-            BotCommand("briefing", "Get your daily briefing now"),
-            BotCommand("settings", "Manage your preferences"),
-            BotCommand("help", "Show help information"),
-            BotCommand("stop", "Stop receiving briefings")
-        ]
-        
-        await self.application.bot.set_my_commands(commands)
+        try:
+            commands = [
+                BotCommand("start", "Start using MorningBrief"),
+                BotCommand("categories", "Select news categories"),
+                BotCommand("briefing", "Get your daily briefing now"),
+                BotCommand("settings", "Manage your preferences"),
+                BotCommand("help", "Show help information"),
+                BotCommand("stop", "Stop receiving briefings")
+            ]
+
+            logger.info("Setting up bot commands...")
+            await self.application.bot.set_my_commands(commands)
+            logger.info("Bot commands set successfully")
+
+        except Exception as e:
+            logger.error(f"Failed to set bot commands: {e}")
+            # Don't fail initialization if commands can't be set
+            pass
     
     async def stop(self):
         """Stop the bot gracefully."""

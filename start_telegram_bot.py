@@ -97,6 +97,14 @@ async def run_bot_service():
         try:
             logger.info("🔄 Starting bot with modern API...")
 
+            # Initialize and start the application first
+            await application.initialize()
+            await application.start()
+
+            # Now set up commands after the application is started
+            logger.info("🔧 Setting up bot commands...")
+            await telegram_bot_service._setup_commands()
+
             # Use the run_polling method which is the recommended approach
             logger.info("🚀 Starting polling...")
             await application.run_polling(drop_pending_updates=True)
