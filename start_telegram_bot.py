@@ -50,22 +50,37 @@ async def main():
         await init_database()
         logger.info("✅ Database initialized successfully")
         
-        # Start the bot in a separate process to avoid event loop conflicts
-        logger.info("🤖 Starting Telegram bot in separate process...")
-        import subprocess
-        import sys
+        # Import and run the bot directly in the current event loop
+        logger.info("🤖 Starting Telegram bot...")
 
-        # Run the bot using the main entry point to avoid event loop conflicts
-        result = subprocess.run([
-            sys.executable, "-c",
-            "from run_telegram_bot import main; main()"
-        ], cwd=".")
+        # Import the setup and run functions separately to avoid main() wrapper
+        from run_telegram_bot import setup_bot
+        from app.services.telegram_bot import telegram_bot_service
 
-        if result.returncode != 0:
-            logger.error(f"❌ Bot process exited with code {result.returncode}")
-            sys.exit(result.returncode)
-        else:
-            logger.info("✅ Bot process completed successfully")
+        # Setup bot
+        logger.info("🔧 Setting up bot...")
+        setup_success = await setup_bot()
+        if not setup_success:
+            logger.error("❌ Bot setup failed")
+            return
+
+        # Start bot polling directly
+        logger.info("🚀 Starting bot polling...")
+        logger.info("✅ Bot is now running and listening for messages...")
+        logger.info("📱 Send /start to your bot to test it!")
+
+        # Start polling - this will run until interrupted
+        async with telegram_bot_service.application:
+            await telegram_bot_service.application.start()
+            await telegram_bot_service.application.updater.start_polling(drop_pending_updates=True)
+
+            # Keep running until interrupted
+            try:
+                # This will run forever until KeyboardInterrupt
+                import asyncio
+                await asyncio.Event().wait()
+            except asyncio.CancelledError:
+                pass
         
     except Exception as e:
         logger.error(f"❌ Failed to start bot: {e}")
