@@ -33,6 +33,11 @@ async def run_bot_service():
     try:
         logger.info("🚀 Starting MorningBrief Telegram Bot on Render...")
 
+        # Log environment info
+        logger.info(f"🐍 Python version: {sys.version}")
+        logger.info(f"🌐 Environment: {os.getenv('ENVIRONMENT', 'unknown')}")
+        logger.info(f"🔧 Service type: {os.getenv('RENDER_SERVICE_TYPE', 'unknown')}")
+
         # Check required environment variables
         required_vars = ['TELEGRAM_BOT_TOKEN', 'OPENAI_API_KEY', 'NEWS_API_KEY', 'DATABASE_URL']
         missing_vars = [var for var in required_vars if not os.getenv(var)]
@@ -42,6 +47,13 @@ async def run_bot_service():
             return False
 
         logger.info("✅ All required environment variables are set")
+
+        # Log token info (safely)
+        token = os.getenv('TELEGRAM_BOT_TOKEN', '')
+        if token:
+            logger.info(f"🤖 Bot token configured: {token[:10]}...{token[-4:]}")
+        else:
+            logger.error("❌ No bot token found")
 
         # Import required modules
         from app.config import settings
@@ -112,12 +124,49 @@ def main():
 
     try:
         logger.info("📍 Starting bot with new event loop")
-        # Create a new event loop for this process
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
 
-        # Run the bot
-        loop.run_until_complete(run_bot_service())
+        # Check if we're in a deployment environment
+        is_render = os.getenv('RENDER_SERVICE_TYPE') == 'worker'
+        if is_render:
+            logger.info("🌐 Running on Render deployment environment")
+        else:
+            logger.info("💻 Running in local/development environment")
+
+        # Create a new event loop for this process
+        try:
+            # Close any existing event loop
+            try:
+                existing_loop = asyncio.get_running_loop()
+                logger.info("⚠️ Found existing event loop, will create new one")
+            except RuntimeError:
+                logger.info("✅ No existing event loop found")
+
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            logger.info("✅ Created new event loop successfully")
+
+            # Run the bot
+            logger.info("🚀 Starting bot service...")
+            result = loop.run_until_complete(run_bot_service())
+
+            if result:
+                logger.info("✅ Bot service completed successfully")
+            else:
+                logger.error("❌ Bot service failed")
+                sys.exit(1)
+
+        except Exception as loop_error:
+            logger.error(f"❌ Event loop error: {loop_error}")
+            import traceback
+            traceback.print_exc()
+
+            # Fallback: try with asyncio.run
+            logger.info("🔄 Trying fallback method with asyncio.run...")
+            try:
+                asyncio.run(run_bot_service())
+            except Exception as fallback_error:
+                logger.error(f"❌ Fallback method also failed: {fallback_error}")
+                sys.exit(1)
 
     except KeyboardInterrupt:
         logger.info("👋 Bot stopped by user")
