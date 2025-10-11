@@ -42,10 +42,11 @@ class TelegramBotService:
 
         try:
             logger.info("Creating Telegram application...")
-            # Create application with proper configuration
+            # Create application with JobQueue disabled to avoid weak reference issues in Python 3.13
             self.application = (
                 Application.builder()
                 .token(settings.TELEGRAM_BOT_TOKEN)
+                .job_queue(None)  # Disable JobQueue to avoid weak reference error
                 .build()
             )
 
