@@ -54,6 +54,11 @@ async def setup_bot():
         # Start background scheduler for news updates
         logger.info("⏰ Starting background scheduler...")
         await start_background_scheduler()
+        # Sync user briefing schedules
+        logger.info("📅 Syncing user briefing schedules...")
+        from app.services.scheduler import scheduler_service
+        scheduled_count = await scheduler_service.sync_user_briefing_schedules()
+        logger.info(f"✅ Synced {scheduled_count} user briefing schedules")
 
         logger.info("✅ MorningBrief Telegram Bot is ready!")
         logger.info(f"   Bot Token: {settings.TELEGRAM_BOT_TOKEN[:10]}...")

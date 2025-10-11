@@ -182,7 +182,7 @@ class TelegramBotService:
             
             # Generate briefing
             await update.message.reply_text("📰 Generating your briefing...")
-            briefing = await self._generate_briefing(user.selected_categories)
+            briefing = await self._generate_briefing(user.selected_categories, user_name=user.first_name, is_scheduled=False)
             
             if briefing:
                 await update.message.reply_text(briefing, parse_mode='Markdown')
@@ -284,7 +284,14 @@ class TelegramBotService:
                 .where(TelegramUser.telegram_id == user_id)
                 .values(daily_time=time_str)
             )
-            await session.commit()
+        # Schedule the user's daily briefing
+        from app.services.scheduler import scheduler_service
+        scheduler_service.schedule_user_briefing(
+            user_id=user_id,
+            daily_time=time_str,
+            timezone="UTC"
+        )
+        await session.commit()
         
         await query.edit_message_text(
             f"✅ Perfect! You'll receive your daily briefing at {time_str} UTC.\n\n"
@@ -418,8 +425,8 @@ class TelegramBotService:
 
         return InlineKeyboardMarkup(keyboard)
 
-    async def _generate_briefing(self, categories: List[str]) -> Optional[str]:
-        """Generate a briefing for the given categories."""
+    async def _generate_briefing(self, categories: List[str], user_name: str = None, is_scheduled: bool = False) -> Optional[str]:
+        """Generate a personalized briefing for the given categories."""
         try:
             session_factory = get_async_session_factory()
             async with session_factory() as session:
@@ -437,10 +444,28 @@ class TelegramBotService:
                 articles = result.scalars().all()
 
                 if not articles:
+                    if user_name:
+                        return f"📰 Hi {user_name}! No recent articles found for your selected categories. Try again later!"
                     return "📰 No recent articles found for your selected categories. Try again later!"
+                # Create personalized greeting based on time of day
+                current_hour = datetime.utcnow().hour
+                if current_hour < 12:
+                    greeting = "Good morning"
+                elif current_hour < 17:
+                    greeting = "Good afternoon"
+                else:
+                    greeting = "Good evening"
 
-                # Format briefing
-                briefing = "🌅 *Your Morning Brief*\n\n"
+                # Format personalized briefing
+                if user_name and is_scheduled:
+                    briefing = f"🌅 *{greeting}, {user_name}!*\n\n"
+                    briefing += "Here's your personalized news briefing for today:\n\n"
+                elif user_name:
+                    briefing = f"🌅 *{greeting}, {user_name}!*\n\n"
+                    briefing += "Here's your current news briefing:\n\n"
+                else:
+
+                    briefing = "🌅 *Your Morning Brief*\n\n"
 
                 # Group articles by category
                 by_category = {}
@@ -459,6 +484,12 @@ class TelegramBotService:
                         briefing += f"• [{article.title}]({article.url})\n"
                         briefing += f"  {summary}\n\n"
                     briefing += "\n"
+
+                # Personalized sign-off
+                if user_name and is_scheduled:
+                    briefing += f"Have a great day, {user_name}! 🌟\n\n"
+                elif user_name:
+                    briefing += f"Stay informed, {user_name}! 📚\n\n"
 
                 briefing += f"📅 Generated at {datetime.utcnow().strftime('%H:%M UTC')}"
                 return briefing
@@ -481,14 +512,14 @@ class TelegramBotService:
                 for user in users:
                     if user.selected_categories and user.daily_time:
                         try:
-                            briefing = await self._generate_briefing(user.selected_categories)
+                            briefing = await self._generate_briefing(user.selected_categories, user_name=user.first_name, is_scheduled=True)
                             if briefing:
                                 await self.application.bot.send_message(
                                     chat_id=user.telegram_id,
                                     text=briefing,
                                     parse_mode='Markdown'
                                 )
-                                logger.info(f"Sent briefing to user {user.telegram_id}")
+                                logger.info(f"✅ Sent scheduled briefing to {user.first_name or "Unknown"} (ID: {user.telegram_id}) at {datetime.utcnow().strftime("%H:%M UTC")} - Scheduled for: {user.daily_time}")
                         except Exception as e:
                             logger.error(f"Failed to send briefing to user {user.telegram_id}: {e}")
 

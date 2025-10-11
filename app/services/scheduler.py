@@ -1,12 +1,16 @@
-"""Scheduler service for automated daily news refresh."""
+"""Scheduler service for automated daily news refresh and user briefing delivery."""
 
 import asyncio
 from datetime import datetime
+from typing import List
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from app.config import settings
 from app.services.selection import news_selection_service
 from app.services.summarizer import summarizer_service
+from app.database import get_async_session_factory
+from app.models import TelegramUser
+from sqlalchemy import select
 import logging
 
 logger = logging.getLogger(__name__)
@@ -144,6 +148,126 @@ class SchedulerService:
         except Exception as e:
             logger.error(f"Failed to add one-time job: {e}")
             return False
+
+    async def send_briefing_to_user(self, user_id: int):
+        """Send a personalized briefing to a specific user."""
+        try:
+            # Import here to avoid circular imports
+            from app.services.telegram_bot import telegram_bot_service
+            
+            session_factory = get_async_session_factory()
+            async with session_factory() as session:
+                # Get user data
+                result = await session.execute(
+                    select(TelegramUser).where(TelegramUser.telegram_id == user_id)
+                )
+                user = result.scalar_one_or_none()
+                
+                if not user or not user.selected_categories or not user.is_active:
+                    logger.warning(f"User {user_id} not found, inactive, or has no categories")
+                    return
+                
+                # Generate personalized briefing
+                briefing = await telegram_bot_service._generate_briefing(
+                    categories=user.selected_categories,
+                    user_name=user.first_name,
+                    is_scheduled=True
+                )
+                
+                if briefing and telegram_bot_service.application:
+                    await telegram_bot_service.application.bot.send_message(
+                        chat_id=user.telegram_id,
+                        text=briefing,
+                        parse_mode="Markdown"
+                    )
+                    logger.info(
+                        f"✅ Sent scheduled briefing to {user.first_name or "Unknown"} "
+                        f"(ID: {user.telegram_id}) at {datetime.utcnow().strftime("%H:%M UTC")} "
+                        f"- Scheduled for: {user.daily_time}"
+                    )
+                else:
+                    logger.error(f"Failed to generate briefing or bot not initialized for user {user_id}")
+                    
+        except Exception as e:
+            logger.error(f"Error sending briefing to user {user_id}: {e}")
+    
+    def schedule_user_briefing(self, user_id: int, daily_time: str, timezone: str = "UTC"):
+        """Schedule a daily briefing for a specific user."""
+        try:
+            # Parse time (format: "HH:MM")
+            hour, minute = map(int, daily_time.split(":"))
+            
+            job_id = f"briefing_user_{user_id}"
+            
+            # Remove existing job if it exists
+            try:
+                self.scheduler.remove_job(job_id)
+                logger.info(f"Removed existing briefing job for user {user_id}")
+            except:
+                pass  # Job didnt exist
+            
+            # Add new job
+            self.scheduler.add_job(
+                func=self.send_briefing_to_user,
+                args=[user_id],
+                trigger=CronTrigger(
+                    hour=hour,
+                    minute=minute,
+                    timezone=timezone
+                ),
+                id=job_id,
+                name=f"Daily Briefing for User {user_id}",
+                replace_existing=True,
+                max_instances=1
+            )
+            
+            logger.info(f"📅 Scheduled daily briefing for user {user_id} at {daily_time} {timezone}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to schedule briefing for user {user_id}: {e}")
+            return False
+    
+    def remove_user_briefing(self, user_id: int):
+        """Remove scheduled briefing for a specific user."""
+        try:
+            job_id = f"briefing_user_{user_id}"
+            self.scheduler.remove_job(job_id)
+            logger.info(f"Removed briefing schedule for user {user_id}")
+            return True
+        except:
+            logger.warning(f"No briefing schedule found for user {user_id}")
+            return False
+    
+    async def sync_user_briefing_schedules(self):
+        """Sync all user briefing schedules from database."""
+        try:
+            session_factory = get_async_session_factory()
+            async with session_factory() as session:
+                # Get all active users with daily_time set
+                result = await session.execute(
+                    select(TelegramUser).where(
+                        TelegramUser.is_active == True,
+                        TelegramUser.daily_time.isnot(None)
+                    )
+                )
+                users = result.scalars().all()
+                
+                scheduled_count = 0
+                for user in users:
+                    if self.schedule_user_briefing(
+                        user_id=user.telegram_id,
+                        daily_time=user.daily_time,
+                        timezone=user.timezone or "UTC"
+                    ):
+                        scheduled_count += 1
+                
+                logger.info(f"✅ Synced {scheduled_count} user briefing schedules")
+                return scheduled_count
+                
+        except Exception as e:
+            logger.error(f"Error syncing user briefing schedules: {e}")
+            return 0
 
 # Global scheduler service instance
 scheduler_service = SchedulerService()
