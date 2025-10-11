@@ -91,17 +91,47 @@ async def run_bot_service():
         logger.info("✅ Bot is now running and listening for messages...")
         logger.info("📱 Send /start to your bot to test it!")
 
-        # Start polling - this will run until interrupted
-        async with telegram_bot_service.application:
-            await telegram_bot_service.application.start()
-            await telegram_bot_service.application.updater.start_polling(drop_pending_updates=True)
+        # Start polling with the modern python-telegram-bot API
+        application = telegram_bot_service.application
 
-            # Keep running until interrupted
+        try:
+            logger.info("🔄 Starting bot with modern API...")
+
+            # Use the run_polling method which is the recommended approach
+            logger.info("🚀 Starting polling...")
+            await application.run_polling(drop_pending_updates=True)
+
+        except Exception as polling_error:
+            logger.error(f"❌ Polling error: {polling_error}")
+
+            # Fallback to manual polling setup
+            logger.info("🔄 Trying manual polling setup...")
             try:
-                # This will run forever until KeyboardInterrupt
-                await asyncio.Event().wait()
-            except (asyncio.CancelledError, KeyboardInterrupt):
-                logger.info("🛑 Received interrupt signal")
+                # Initialize the application
+                await application.initialize()
+                await application.start()
+
+                # Start polling manually
+                logger.info("🔄 Starting manual polling...")
+                await application.updater.start_polling(drop_pending_updates=True)
+
+                # Keep running until interrupted
+                try:
+                    logger.info("♾️ Bot is now running indefinitely...")
+                    # This will run forever until KeyboardInterrupt
+                    await asyncio.Event().wait()
+                except (asyncio.CancelledError, KeyboardInterrupt):
+                    logger.info("🛑 Received interrupt signal")
+                finally:
+                    # Clean shutdown
+                    logger.info("🔄 Stopping polling...")
+                    await application.updater.stop()
+                    await application.stop()
+                    await application.shutdown()
+
+            except Exception as manual_error:
+                logger.error(f"❌ Manual polling also failed: {manual_error}")
+                raise
 
         return True
 
