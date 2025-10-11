@@ -64,12 +64,12 @@ async def run_bot_service():
         # Validate settings
         if not settings.validate_settings():
             logger.error("❌ Invalid configuration. Please check your environment variables.")
+            return False
         # Sync user briefing schedules
         logger.info("📅 Syncing user briefing schedules...")
         from app.services.scheduler import scheduler_service
         scheduled_count = await scheduler_service.sync_user_briefing_schedules()
         logger.info(f"✅ Synced {scheduled_count} user briefing schedules")
-            return False
 
         # Initialize database
         logger.info("📊 Initializing database...")
