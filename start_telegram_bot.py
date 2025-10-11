@@ -50,10 +50,22 @@ async def main():
         await init_database()
         logger.info("✅ Database initialized successfully")
         
-        # Import and run the bot (after database is ready)
-        logger.info("🤖 Starting Telegram bot...")
-        from run_telegram_bot import run_bot
-        await run_bot()
+        # Start the bot in a separate process to avoid event loop conflicts
+        logger.info("🤖 Starting Telegram bot in separate process...")
+        import subprocess
+        import sys
+
+        # Run the bot using the main entry point to avoid event loop conflicts
+        result = subprocess.run([
+            sys.executable, "-c",
+            "from run_telegram_bot import main; main()"
+        ], cwd=".")
+
+        if result.returncode != 0:
+            logger.error(f"❌ Bot process exited with code {result.returncode}")
+            sys.exit(result.returncode)
+        else:
+            logger.info("✅ Bot process completed successfully")
         
     except Exception as e:
         logger.error(f"❌ Failed to start bot: {e}")
