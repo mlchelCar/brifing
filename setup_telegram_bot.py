@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 MorningBrief - News Briefing Application
-Copyright (c) 2025 Michel Car. All rights reserved.
+Copyright (c) 2025 Michel Car
 
 REDIRECT SCRIPT: This script redirects to the correct startup process.
 Render was trying to run this file due to cached configuration.

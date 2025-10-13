@@ -1,9 +1,8 @@
 """
 MorningBrief - News Briefing Application
-Copyright (c) 2025 Michel Car. All rights reserved.
+Copyright (c) 2025 Michel Car
 
-This software is proprietary and confidential. Unauthorized use, reproduction,
-or distribution is strictly prohibited.
+Licensed under the MIT License. See LICENSE file for details.
 
 Telegram bot service for MorningBrief.
 """
