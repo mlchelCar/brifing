@@ -43,9 +43,16 @@
                     <a href="#how-it-works" class="text-slate-600 hover:text-slate-900 transition-colors">How it works</a>
                     <a href="#benefits" class="text-slate-600 hover:text-slate-900 transition-colors">Benefits</a>
                     <a href="#preview" class="text-slate-600 hover:text-slate-900 transition-colors">Preview</a>
-                    <a href="#pricing" class="text-slate-600 hover:text-slate-900 transition-colors">Pricing</a>
-                    <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                        Get Started
+                    <a href="#get-started" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                        Get Started Free
+                    </a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button class="text-slate-600 hover:text-slate-900">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -53,188 +60,146 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="gradient-bg py-20 lg:py-32">
+    <section class="hero-gradient text-white py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div class="fade-in">
-                    <h1 class="text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-6">
-                        Get your daily brief before your coffee's ready
-                    </h1>
-                    <p class="text-xl text-slate-600 mb-8 leading-relaxed">
-                        Stop scrolling through endless feeds. Receive a concise, curated summary of what matters — in just 2 minutes, every morning.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <button class="hero-gradient text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-lg transition-all transform hover:scale-105">
-                            📱 Get My Morning Brief
-                        </button>
-                        <button class="bg-white text-slate-700 px-8 py-4 rounded-xl font-semibold text-lg border border-slate-300 hover:bg-slate-50 transition-colors">
-                            👀 See a Sample Brief
-                        </button>
-                    </div>
+            <div class="text-center">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 fade-in">
+                    Get your daily brief before your coffee's ready
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto fade-in animate-delay-1">
+                    Stop scrolling through endless feeds. Receive a concise, curated summary of what matters — in just 2 minutes, every morning.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in animate-delay-2">
+                    <a href="https://t.me/YourMorningBriefBot" target="_blank" class="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-colors inline-flex items-center justify-center">
+                        📱 Start Free on Telegram
+                    </a>
+                    <button class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-colors">
+                        See How It Works
+                    </button>
                 </div>
-                <div class="fade-in animate-delay-2">
-                    <!-- Product Mockup -->
-                    <div class="relative">
-                        <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md mx-auto">
-                            <div class="flex items-center mb-6">
-                                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                                    MB
-                                </div>
-                                <div class="ml-3">
-                                    <div class="font-semibold text-slate-900">MorningBrief</div>
-                                    <div class="text-sm text-slate-500">Today • 7:00 AM</div>
-                                </div>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="bg-slate-50 rounded-lg p-4">
-                                    <div class="font-medium text-slate-900 mb-2">🚀 Tech</div>
-                                    <div class="text-sm text-slate-600">Breakthrough in quantum computing shows 1000x speed improvement...</div>
-                                </div>
-                                <div class="bg-slate-50 rounded-lg p-4">
-                                    <div class="font-medium text-slate-900 mb-2">💼 Business</div>
-                                    <div class="text-sm text-slate-600">Major merger announced between two Fortune 500 companies...</div>
-                                </div>
-                                <div class="bg-slate-50 rounded-lg p-4">
-                                    <div class="font-medium text-slate-900 mb-2">🌍 World</div>
-                                    <div class="text-sm text-slate-600">Climate summit reaches historic agreement on carbon reduction...</div>
-                                </div>
-                            </div>
-                            <div class="mt-6 text-center">
-                                <div class="text-sm text-slate-500">📖 2 min read • 12 stories</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <p class="text-blue-100 mt-4 fade-in animate-delay-3">
+                    ✨ 100% Free • No signup required • Instant access
+                </p>
             </div>
         </div>
     </section>
 
     <!-- How It Works Section -->
-    <section id="how-it-works" class="py-20 bg-white">
+    <section id="how-it-works" class="py-20 gradient-bg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold text-slate-900 mb-4">How it works</h2>
                 <p class="text-xl text-slate-600 max-w-2xl mx-auto">
-                    Three simple steps to transform your morning routine
+                    Three simple steps to stay informed without the overwhelm
                 </p>
             </div>
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="text-center fade-in">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="text-2xl">⚙️</span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-slate-900 mb-4">1. Choose categories</h3>
-                    <p class="text-slate-600">Select the topics that matter to you: tech, business, world news, and more.</p>
-                </div>
-                <div class="text-center fade-in animate-delay-1">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="text-2xl">🤖</span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-slate-900 mb-4">2. Smart curation</h3>
-                    <p class="text-slate-600">Our system scans hundreds of sources and picks the most important stories for you.</p>
-                </div>
-                <div class="text-center fade-in animate-delay-2">
+                <div class="text-center card-hover bg-white p-8 rounded-2xl">
                     <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                         <span class="text-2xl">📱</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-slate-900 mb-4">3. Receive your brief</h3>
-                    <p class="text-slate-600">Get a concise summary delivered to your phone every morning at 7 AM.</p>
+                    <h3 class="text-xl font-semibold text-slate-900 mb-4">1. Start on Telegram</h3>
+                    <p class="text-slate-600">
+                        Message our bot on Telegram. No app downloads, no account creation. Just start chatting.
+                    </p>
+                </div>
+                <div class="text-center card-hover bg-white p-8 rounded-2xl">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl">⚙️</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-900 mb-4">2. Choose Your Topics</h3>
+                    <p class="text-slate-600">
+                        Select from technology, business, politics, sports, and more. We'll remember your preferences.
+                    </p>
+                </div>
+                <div class="text-center card-hover bg-white p-8 rounded-2xl">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl">📰</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-900 mb-4">3. Get Your Brief</h3>
+                    <p class="text-slate-600">
+                        Receive a personalized 2-minute summary every morning. Stay informed, not overwhelmed.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Benefits Section -->
-    <section id="benefits" class="py-20 gradient-bg">
+    <section id="benefits" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-slate-900 mb-4">Why professionals choose MorningBrief</h2>
-                <p class="text-xl text-slate-600 max-w-2xl mx-auto">
-                    Start your day smarter, not overwhelmed
-                </p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-2xl p-8 shadow-lg card-hover fade-in">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                        <span class="text-2xl">⏰</span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-slate-900 mb-4">Save time</h3>
-                    <p class="text-slate-600">Get key info in just 2 minutes instead of scrolling for hours through social feeds.</p>
-                </div>
-                <div class="bg-white rounded-2xl p-8 shadow-lg card-hover fade-in animate-delay-1">
-                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                        <span class="text-2xl">🎯</span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-slate-900 mb-4">Stay informed</h3>
-                    <p class="text-slate-600">Curated from top sources ensures you never miss what actually matters.</p>
-                </div>
-                <div class="bg-white rounded-2xl p-8 shadow-lg card-hover fade-in animate-delay-2">
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
-                        <span class="text-2xl">🚀</span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-slate-900 mb-4">Boost productivity</h3>
-                    <p class="text-slate-600">Start your day smarter with context and insights that help you make better decisions.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Preview Section -->
-    <section id="preview" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-slate-900 mb-4">See it in action</h2>
-                <p class="text-xl text-slate-600 max-w-2xl mx-auto">
-                    Here's what your morning brief looks like
-                </p>
-            </div>
-            <div class="max-w-4xl mx-auto">
-                <div class="bg-slate-900 rounded-2xl p-8 shadow-2xl">
-                    <div class="bg-white rounded-xl p-6">
-                        <div class="flex items-center justify-between mb-6">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                                    MB
-                                </div>
-                                <div class="ml-3">
-                                    <div class="font-semibold text-slate-900">Your Morning Brief</div>
-                                    <div class="text-sm text-slate-500">Tuesday, March 12 • 7:00 AM</div>
-                                </div>
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold text-slate-900 mb-6">Why busy professionals choose MorningBrief</h2>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <span class="text-green-600 font-bold">✓</span>
                             </div>
-                            <div class="text-sm text-slate-500">📖 2 min read</div>
-                        </div>
-                        
-                        <div class="space-y-6">
-                            <div class="border-l-4 border-blue-500 pl-4">
-                                <div class="flex items-center mb-2">
-                                    <span class="text-lg mr-2">🚀</span>
-                                    <span class="font-semibold text-slate-900">Technology</span>
-                                </div>
-                                <h3 class="font-semibold text-slate-900 mb-2">OpenAI announces GPT-5 with breakthrough reasoning capabilities</h3>
-                                <p class="text-slate-600 text-sm">The new model shows significant improvements in complex problem-solving and mathematical reasoning, potentially revolutionizing AI applications in science and engineering.</p>
-                            </div>
-                            
-                            <div class="border-l-4 border-green-500 pl-4">
-                                <div class="flex items-center mb-2">
-                                    <span class="text-lg mr-2">💼</span>
-                                    <span class="font-semibold text-slate-900">Business</span>
-                                </div>
-                                <h3 class="font-semibold text-slate-900 mb-2">Tesla reports record quarterly deliveries</h3>
-                                <p class="text-slate-600 text-sm">Electric vehicle giant delivered 500,000 cars in Q1, beating analyst expectations and driving stock price up 8% in pre-market trading.</p>
-                            </div>
-                            
-                            <div class="border-l-4 border-orange-500 pl-4">
-                                <div class="flex items-center mb-2">
-                                    <span class="text-lg mr-2">🌍</span>
-                                    <span class="font-semibold text-slate-900">World</span>
-                                </div>
-                                <h3 class="font-semibold text-slate-900 mb-2">Global climate summit reaches historic agreement</h3>
-                                <p class="text-slate-600 text-sm">195 countries commit to new carbon reduction targets, with binding commitments to achieve net-zero emissions by 2050.</p>
+                            <div>
+                                <h3 class="font-semibold text-slate-900 mb-2">Save 30+ minutes daily</h3>
+                                <p class="text-slate-600">No more endless scrolling. Get the essential news in just 2 minutes.</p>
                             </div>
                         </div>
-                        
-                        <div class="mt-6 pt-6 border-t border-slate-200 text-center">
-                            <p class="text-sm text-slate-500">📊 12 stories from 8 categories • Powered by AI</p>
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <span class="text-green-600 font-bold">✓</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-900 mb-2">AI-curated quality</h3>
+                                <p class="text-slate-600">Our AI filters noise and delivers only what matters to you.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <span class="text-green-600 font-bold">✓</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-900 mb-2">Personalized for you</h3>
+                                <p class="text-slate-600">Choose your topics and get briefings tailored to your interests.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <span class="text-green-600 font-bold">✓</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-900 mb-2">Always free</h3>
+                                <p class="text-slate-600">No hidden costs, no premium tiers. Quality news briefings for everyone.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-8 rounded-2xl">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-2">What you get every morning</h3>
+                        <p class="text-slate-600">A sample of your personalized briefing</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-slate-200">
+                        <div class="flex items-center mb-4">
+                            <span class="text-2xl mr-3">🌅</span>
+                            <div>
+                                <h4 class="font-semibold text-slate-900">Good morning, Alex!</h4>
+                                <p class="text-sm text-slate-500">Your personalized briefing for today</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <h5 class="font-semibold text-slate-900 mb-2">🚀 Technology</h5>
+                                <div class="text-sm text-slate-600 space-y-2">
+                                    <p>• <strong>OpenAI launches GPT-5:</strong> New model shows 40% improvement in reasoning capabilities...</p>
+                                    <p>• <strong>Tesla stock surges:</strong> Electric vehicle giant delivered 500,000 cars in Q1...</p>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-slate-900 mb-2">💼 Business</h5>
+                                <div class="text-sm text-slate-600 space-y-2">
+                                    <p>• <strong>Fed holds rates steady:</strong> Central bank maintains current policy amid inflation concerns...</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-slate-100">
+                            <p class="text-xs text-slate-500">📅 Generated at 07:00 UTC • 2 min read</p>
                         </div>
                     </div>
                 </div>
@@ -242,146 +207,30 @@
         </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <section class="py-20 gradient-bg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-slate-900 mb-4">Trusted by professionals</h2>
-                <p class="text-xl text-slate-600 max-w-2xl mx-auto">
-                    See what busy professionals are saying
-                </p>
+    <!-- Get Started Section -->
+    <section id="get-started" class="py-20 hero-gradient text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-6">Ready to reclaim your mornings?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">
+                Join thousands of professionals who start their day informed, not overwhelmed.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                <a href="https://t.me/YourMorningBriefBot" target="_blank" class="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-colors inline-flex items-center justify-center">
+                    📱 Start Free on Telegram
+                </a>
             </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-2xl p-8 shadow-lg fade-in">
-                    <div class="mb-6">
-                        <div class="text-yellow-400 text-xl mb-4">⭐⭐⭐⭐⭐</div>
-                        <p class="text-slate-600 italic">"Finally, a news source that respects my time. I get everything I need to know in 2 minutes."</p>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                            SJ
-                        </div>
-                        <div class="ml-3">
-                            <div class="font-semibold text-slate-900">Sarah Johnson</div>
-                            <div class="text-sm text-slate-500">Product Manager, Tech Startup</div>
-                        </div>
-                    </div>
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <div class="text-3xl font-bold mb-2">2 min</div>
+                    <div class="text-blue-100">Daily read time</div>
                 </div>
-                
-                <div class="bg-white rounded-2xl p-8 shadow-lg fade-in animate-delay-1">
-                    <div class="mb-6">
-                        <div class="text-yellow-400 text-xl mb-4">⭐⭐⭐⭐⭐</div>
-                        <p class="text-slate-600 italic">"The AI curation is spot-on. I never miss important industry news anymore."</p>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                            MC
-                        </div>
-                        <div class="ml-3">
-                            <div class="font-semibold text-slate-900">Michael Chen</div>
-                            <div class="text-sm text-slate-500">Investment Analyst</div>
-                        </div>
-                    </div>
+                <div>
+                    <div class="text-3xl font-bold mb-2">100%</div>
+                    <div class="text-blue-100">Free forever</div>
                 </div>
-                
-                <div class="bg-white rounded-2xl p-8 shadow-lg fade-in animate-delay-2">
-                    <div class="mb-6">
-                        <div class="text-yellow-400 text-xl mb-4">⭐⭐⭐⭐⭐</div>
-                        <p class="text-slate-600 italic">"Perfect for busy executives. I start every day informed and confident."</p>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                            AR
-                        </div>
-                        <div class="ml-3">
-                            <div class="font-semibold text-slate-900">Amanda Rodriguez</div>
-                            <div class="text-sm text-slate-500">CEO, Marketing Agency</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-slate-900 mb-4">Simple, transparent pricing</h2>
-                <p class="text-xl text-slate-600 max-w-2xl mx-auto">
-                    Start free, upgrade when you're ready
-                </p>
-            </div>
-            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-                <div class="bg-white border-2 border-slate-200 rounded-2xl p-8 text-center">
-                    <div class="mb-8">
-                        <h3 class="text-2xl font-bold text-slate-900 mb-2">Free</h3>
-                        <p class="text-slate-600">Perfect to get started</p>
-                        <div class="mt-4">
-                            <span class="text-4xl font-bold text-slate-900">$0</span>
-                            <span class="text-slate-500">/month</span>
-                        </div>
-                    </div>
-                    <ul class="space-y-4 mb-8 text-left">
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-3">✓</span>
-                            <span class="text-slate-600">Daily briefings on Telegram</span>
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-3">✓</span>
-                            <span class="text-slate-600">5 news categories</span>
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-3">✓</span>
-                            <span class="text-slate-600">Curated content</span>
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-3">✓</span>
-                            <span class="text-slate-600">2-minute read time</span>
-                        </li>
-                    </ul>
-                    <button class="w-full bg-slate-100 text-slate-700 py-3 rounded-xl font-semibold hover:bg-slate-200 transition-colors">
-                        Start Free on Telegram
-                    </button>
-                </div>
-                
-                <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-8 text-center relative">
-                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                        <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold">Coming Soon</span>
-                    </div>
-                    <div class="mb-8">
-                        <h3 class="text-2xl font-bold text-slate-900 mb-2">Pro</h3>
-                        <p class="text-slate-600">For power users</p>
-                        <div class="mt-4">
-                            <span class="text-4xl font-bold text-slate-900">$9</span>
-                            <span class="text-slate-500">/month</span>
-                        </div>
-                    </div>
-                    <ul class="space-y-4 mb-8 text-left">
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-3">✓</span>
-                            <span class="text-slate-600">Everything in Free</span>
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-3">✓</span>
-                            <span class="text-slate-600">Unlimited categories</span>
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-3">✓</span>
-                            <span class="text-slate-600">Custom delivery times</span>
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-3">✓</span>
-                            <span class="text-slate-600">Email & SMS delivery</span>
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-3">✓</span>
-                            <span class="text-slate-600">Priority support</span>
-                        </li>
-                    </ul>
-                    <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
-                        Join Waitlist
-                    </button>
+                <div>
+                    <div class="text-3xl font-bold mb-2">5+</div>
+                    <div class="text-blue-100">News categories</div>
                 </div>
             </div>
         </div>
@@ -396,54 +245,32 @@
                     <p class="text-slate-400 mb-6 max-w-md">
                         Get your daily brief before your coffee's ready. AI-curated news summaries for busy professionals.
                     </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-slate-400 hover:text-white transition-colors">
-                            <span class="sr-only">Twitter</span>
-                            🐦
-                        </a>
-                        <a href="#" class="text-slate-400 hover:text-white transition-colors">
-                            <span class="sr-only">LinkedIn</span>
-                            💼
-                        </a>
-                        <a href="#" class="text-slate-400 hover:text-white transition-colors">
-                            <span class="sr-only">Telegram</span>
-                            📱
-                        </a>
-                    </div>
                 </div>
-                
                 <div>
-                    <h3 class="font-semibold mb-4">Product</h3>
+                    <h4 class="font-semibold mb-4">Product</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-slate-400 hover:text-white transition-colors">How it works</a></li>
-                        <li><a href="#" class="text-slate-400 hover:text-white transition-colors">Features</a></li>
-                        <li><a href="#" class="text-slate-400 hover:text-white transition-colors">Pricing</a></li>
-                        <li><a href="#" class="text-slate-400 hover:text-white transition-colors">API</a></li>
+                        <li><a href="#how-it-works" class="text-slate-400 hover:text-white transition-colors">How it works</a></li>
+                        <li><a href="#benefits" class="text-slate-400 hover:text-white transition-colors">Benefits</a></li>
+                        <li><a href="#get-started" class="text-slate-400 hover:text-white transition-colors">Get Started</a></li>
                     </ul>
                 </div>
-                
                 <div>
-                    <h3 class="font-semibold mb-4">Company</h3>
+                    <h4 class="font-semibold mb-4">Support</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-slate-400 hover:text-white transition-colors">About</a></li>
-                        <li><a href="#" class="text-slate-400 hover:text-white transition-colors">Contact</a></li>
-                        <li><a href="#" class="text-slate-400 hover:text-white transition-colors">Privacy</a></li>
-                        <li><a href="#" class="text-slate-400 hover:text-white transition-colors">Terms</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-white transition-colors">Help Center</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-white transition-colors">Privacy Policy</a></li>
                     </ul>
                 </div>
             </div>
-            
-            <div class="border-t border-slate-800 mt-12 pt-8 text-center">
-                <p class="text-slate-400">
-                    © 2024 MorningBrief. All rights reserved. Built with ❤️ for busy professionals.
-                </p>
+            <div class="border-t border-slate-800 mt-12 pt-8 text-center text-slate-400">
+                <p>&copy; 2025 MorningBrief. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript for smooth scrolling and animations -->
+    <!-- JavaScript for smooth scrolling -->
     <script>
-        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -456,39 +283,7 @@
                 }
             });
         });
-
-        // Intersection Observer for fade-in animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all fade-in elements
-        document.querySelectorAll('.fade-in').forEach(el => {
-            el.style.animationPlayState = 'paused';
-            observer.observe(el);
-        });
-
-        // CTA button interactions
-        document.querySelectorAll('button').forEach(button => {
-            button.addEventListener('click', function() {
-                if (this.textContent.includes('Get My Morning Brief') || this.textContent.includes('Get Started')) {
-                    alert('🚀 Redirecting to Telegram bot setup...\n\nIn a real implementation, this would:\n1. Open Telegram\n2. Start a conversation with @MorningBriefBot\n3. Guide user through category selection');
-                } else if (this.textContent.includes('See a Sample Brief')) {
-                    document.querySelector('#preview').scrollIntoView({ behavior: 'smooth' });
-                } else if (this.textContent.includes('Join Waitlist')) {
-                    alert('📝 Thank you for your interest!\n\nYou\'ll be notified when Pro features are available.');
-                }
-            });
-        });
     </script>
+
 </body>
 </html>
