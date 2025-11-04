@@ -13,8 +13,9 @@ from app.models import (
     NewsArticle
 )
 from app.config import settings
-from app.services.selection import news_selection_service
-from app.services.summarizer import summarizer_service
+from app.services.pipeline import PipelineService
+from app.services.processors.storage import StorageProcessor
+from app.services.serving import SmartServingService
 import logging
 
 logger = logging.getLogger(__name__)
@@ -56,51 +57,66 @@ async def generate_briefing(
         )
     
     try:
-        # First, try to get recent articles from database
-        recent_articles = await summarizer_service.get_recent_articles(
-            categories=request.categories,
-            session=session,
-            hours=24
+        # Create services
+        storage_processor = StorageProcessor(session=session)
+        pipeline_service = PipelineService(storage_processor=storage_processor)
+        serving_service = SmartServingService(
+            storage_processor=storage_processor,
+            pipeline_service=pipeline_service
         )
         
-        # If we have recent articles, return them
-        if recent_articles:
-            logger.info(f"Returning {len(recent_articles)} recent articles from database")
+        # Get fresh and relevant articles using smart serving
+        articles, metadata = await serving_service.get_fresh_articles(
+            categories=request.categories,
+            min_articles_per_category=settings.MIN_ARTICLES_PER_CATEGORY,
+            auto_refresh=True
+        )
+        
+        # If refresh was triggered, add background task
+        if metadata.get("refresh_triggered") and metadata.get("refresh_categories"):
+            logger.info(f"Triggering background refresh for categories: {metadata['refresh_categories']}")
+            background_tasks.add_task(
+                fetch_and_process_articles_background,
+                metadata["refresh_categories"]
+            )
+        
+        # Build article responses with freshness metadata
+        article_responses = []
+        for article in articles:
+            # Get article metadata (freshness, relevance scores)
+            article_metadata = await serving_service.get_article_metadata(article)
             
-            article_responses = [
+            article_responses.append(
                 ArticleResponse(
                     title=article.title,
                     url=article.url,
                     description=article.description,
-                    summary=article.summary,
+                    summary=article.summary,  # Backward compatibility
+                    ai_summary=article.ai_summary,  # AI-generated summary
                     category=article.category,
-                    created_at=article.created_at
+                    created_at=article.created_at,
+                    freshness_score=article_metadata.get("freshness_score"),
+                    freshness_tier=article_metadata.get("freshness_tier"),
+                    relevance_score=article_metadata.get("relevance_score"),
+                    composite_score=article_metadata.get("composite_score")
                 )
-                for article in recent_articles
-            ]
-            
-            return BriefingResponse(
-                categories=request.categories,
-                articles=article_responses,
-                total_articles=len(article_responses),
-                generated_at=datetime.utcnow()
             )
         
-        # If no recent articles, fetch new ones
-        logger.info(f"No recent articles found, fetching new articles for categories: {request.categories}")
+        # If no articles found, trigger background refresh
+        if not articles:
+            logger.info(f"No fresh articles found, triggering background refresh for categories: {request.categories}")
+            background_tasks.add_task(
+                fetch_and_process_articles_background,
+                request.categories
+            )
         
-        # Add background task to fetch and process new articles
-        background_tasks.add_task(
-            fetch_and_process_articles_background,
-            request.categories
-        )
-        
-        # Return empty response with message
         return BriefingResponse(
             categories=request.categories,
-            articles=[],
-            total_articles=0,
-            generated_at=datetime.utcnow()
+            articles=article_responses,
+            total_articles=len(article_responses),
+            generated_at=datetime.utcnow(),
+            freshness_metadata=metadata.get("freshness_scores"),
+            refresh_triggered=metadata.get("refresh_triggered", False)
         )
         
     except Exception as e:
@@ -116,10 +132,13 @@ async def get_briefing_status(
     
     category_list = categories.split(",")
     
+    # Create pipeline service with storage processor
+    storage_processor = StorageProcessor(session=session)
+    pipeline_service = PipelineService(storage_processor=storage_processor)
+    
     # Get recent articles count
-    recent_articles = await summarizer_service.get_recent_articles(
+    recent_articles = await pipeline_service.get_recent_articles(
         categories=category_list,
-        session=session,
         hours=24
     )
     
@@ -135,15 +154,24 @@ async def fetch_and_process_articles_background(categories: List[str]):
     try:
         logger.info(f"Starting background task to fetch articles for categories: {categories}")
         
-        # Fetch articles for all categories
-        category_articles = await news_selection_service.select_articles_for_categories(categories)
-        
-        # Process and save articles
-        if category_articles:
-            saved_articles = await summarizer_service.process_and_save_articles(category_articles)
-            logger.info(f"Background task completed: processed {len(saved_articles)} articles")
-        else:
-            logger.warning("No articles found in background task")
+        # Create pipeline service with database session
+        async for session in get_async_session():
+            storage_processor = StorageProcessor(session=session)
+            pipeline_service = PipelineService(storage_processor=storage_processor)
+            
+            # Process articles through the pipeline
+            result = await pipeline_service.process_categories(
+                categories=categories,
+                enable_selection=True,
+                enable_summarization=True,
+                enable_storage=True
+            )
+            
+            logger.info(
+                f"Background task completed: processed {result.total_count} articles "
+                f"({result.success_count} successful, {result.error_count} errors)"
+            )
+            break
             
     except Exception as e:
         logger.error(f"Error in background task: {e}")

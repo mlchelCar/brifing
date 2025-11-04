@@ -10,9 +10,17 @@ load_dotenv()
 class Settings:
     """Application settings loaded from environment variables."""
     
+    # LLM Provider Configuration
+    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "openai")  # openai, openrouter, mock
+    USE_MOCK: bool = os.getenv("USE_MOCK", "False").lower() == "true"
+    
     # OpenAI Configuration
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
-    OPENAI_MODEL: str = "gpt-4o-mini"
+    OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+    
+    # OpenRouter Configuration
+    OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
+    OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini")
     
     # News API Configuration
     NEWS_API_KEY: str = os.getenv("NEWS_API_KEY", "")
@@ -40,6 +48,17 @@ class Settings:
     MAX_CATEGORIES: int = int(os.getenv("MAX_CATEGORIES", "10"))
     ARTICLES_PER_CATEGORY: int = int(os.getenv("ARTICLES_PER_CATEGORY", "10"))
     TOP_ARTICLES_PER_CATEGORY: int = int(os.getenv("TOP_ARTICLES_PER_CATEGORY", "3"))
+    
+    # Freshness Configuration
+    MIN_FRESHNESS_SCORE: float = float(os.getenv("MIN_FRESHNESS_SCORE", "0.3"))
+    MIN_RELEVANCE_SCORE: float = float(os.getenv("MIN_RELEVANCE_SCORE", "0.5"))
+    MIN_ARTICLES_PER_CATEGORY: int = int(os.getenv("MIN_ARTICLES_PER_CATEGORY", "3"))
+    AUTO_REFRESH_FRESHNESS_THRESHOLD: float = float(os.getenv("AUTO_REFRESH_FRESHNESS_THRESHOLD", "0.4"))
+    
+    # Ranking weights
+    FRESHNESS_WEIGHT: float = float(os.getenv("FRESHNESS_WEIGHT", "0.4"))
+    RELEVANCE_WEIGHT: float = float(os.getenv("RELEVANCE_WEIGHT", "0.4"))
+    SELECTION_WEIGHT: float = float(os.getenv("SELECTION_WEIGHT", "0.2"))
     
     # Available news categories
     AVAILABLE_CATEGORIES: List[str] = [

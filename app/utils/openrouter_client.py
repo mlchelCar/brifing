@@ -1,23 +1,32 @@
-"""OpenAI client utility for ChatGPT-4o-mini integration."""
+"""
+MorningBrief - News Briefing Application
+Copyright (c) 2025 Michel Car
+
+OpenRouter API client for LLM integration.
+"""
 
 import json
 import asyncio
+import httpx
 from typing import List, Dict, Any, Optional
-from openai import AsyncOpenAI
-from app.config import settings
 from app.utils.llm_client import LLMClient
+from app.config import settings
 import logging
 
 logger = logging.getLogger(__name__)
 
-class OpenAIClient(LLMClient):
-    """OpenAI client wrapper with error handling and rate limiting."""
+
+class OpenRouterClient(LLMClient):
+    """OpenRouter API client wrapper with error handling and rate limiting."""
     
     def __init__(self):
-        self.client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
-        self.model = settings.OPENAI_MODEL
+        """Initialize OpenRouter client."""
+        self.api_key = settings.OPENROUTER_API_KEY
+        self.api_url = "https://openrouter.ai/api/v1/chat/completions"
+        self.model = settings.OPENROUTER_MODEL or "openai/gpt-4o-mini"
         self.max_retries = 3
         self.retry_delay = 1  # seconds
+        self.timeout = 30  # seconds
     
     async def _make_request(
         self, 
@@ -25,23 +34,49 @@ class OpenAIClient(LLMClient):
         temperature: float = 0.7,
         max_tokens: Optional[int] = None
     ) -> str:
-        """Make a request to OpenAI with retry logic."""
+        """Make a request to OpenRouter API with retry logic."""
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://morningbrief.app",  # Optional: for tracking
+            "X-Title": "MorningBrief",  # Optional: for tracking
+        }
+        
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "temperature": temperature,
+        }
+        
+        if max_tokens:
+            payload["max_tokens"] = max_tokens
+        
         for attempt in range(self.max_retries):
             try:
-                response = await self.client.chat.completions.create(
-                    model=self.model,
-                    messages=messages,
-                    temperature=temperature,
-                    max_tokens=max_tokens
-                )
-                return response.choices[0].message.content.strip()
+                async with httpx.AsyncClient(timeout=self.timeout) as client:
+                    response = await client.post(
+                        self.api_url,
+                        headers=headers,
+                        json=payload
+                    )
+                    response.raise_for_status()
+                    
+                    data = response.json()
+                    return data["choices"][0]["message"]["content"].strip()
             
-            except Exception as e:
-                logger.warning(f"OpenAI request attempt {attempt + 1} failed: {str(e)}")
+            except httpx.HTTPError as e:
+                logger.warning(f"OpenRouter request attempt {attempt + 1} failed: {str(e)}")
                 if attempt < self.max_retries - 1:
                     await asyncio.sleep(self.retry_delay * (attempt + 1))
                 else:
-                    logger.error(f"OpenAI request failed after {self.max_retries} attempts")
+                    logger.error(f"OpenRouter request failed after {self.max_retries} attempts")
+                    raise e
+            except Exception as e:
+                logger.warning(f"OpenRouter request attempt {attempt + 1} failed: {str(e)}")
+                if attempt < self.max_retries - 1:
+                    await asyncio.sleep(self.retry_delay * (attempt + 1))
+                else:
+                    logger.error(f"OpenRouter request failed after {self.max_retries} attempts")
                     raise e
     
     async def select_top_articles(
@@ -50,7 +85,7 @@ class OpenAIClient(LLMClient):
         category: str, 
         top_count: int = 3
     ) -> List[Dict[str, Any]]:
-        """Use ChatGPT to select the most important articles from a list."""
+        """Use OpenRouter to select the most important articles from a list."""
         
         if len(articles) <= top_count:
             return articles
@@ -101,7 +136,7 @@ Example: [1, 3, 7]
             return selected_articles[:top_count]
             
         except (json.JSONDecodeError, ValueError) as e:
-            logger.error(f"Failed to parse AI selection response: {e}")
+            logger.error(f"Failed to parse OpenRouter selection response: {e}")
             # Fallback: return first N articles
             return articles[:top_count]
     
@@ -138,13 +173,3 @@ Provide a clear, informative summary that captures the essence of the article.
             # Fallback to description or title
             return description if description else f"News article: {title}"
 
-# Global LLM client instance (for backward compatibility)
-# Uses provider factory to support OpenAI, OpenRouter, or Mock
-# Note: New code should use get_llm_client() from llm_provider
-def _get_openai_client():
-    """Lazy initialization to avoid circular imports."""
-    from app.utils.llm_provider import get_llm_client
-    return get_llm_client()
-
-# Export as openai_client for backward compatibility
-openai_client = _get_openai_client()

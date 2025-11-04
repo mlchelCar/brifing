@@ -8,7 +8,7 @@ Database models for the Daily Briefing application.
 """
 
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Dict, Any
 from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, BigInteger, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
@@ -26,7 +26,8 @@ class NewsArticle(Base):
     title = Column(String(500), nullable=False)
     url = Column(String(1000), nullable=False, unique=True)
     description = Column(Text, nullable=True)
-    summary = Column(Text, nullable=True)
+    summary = Column(Text, nullable=True)  # Kept for backward compatibility
+    ai_summary = Column(Text, nullable=True)  # AI-generated summary
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     is_active = Column(Boolean, default=True)
@@ -70,9 +71,14 @@ class ArticleResponse(BaseModel):
     title: str
     url: str
     description: Optional[str] = None
-    summary: Optional[str] = None
+    summary: Optional[str] = None  # Kept for backward compatibility
+    ai_summary: Optional[str] = None  # AI-generated summary
     category: str
     created_at: datetime
+    freshness_score: Optional[float] = None  # Freshness score (0.0 to 1.0)
+    freshness_tier: Optional[str] = None  # Human-readable freshness tier
+    relevance_score: Optional[float] = None  # Relevance score (0.0 to 1.0)
+    composite_score: Optional[float] = None  # Composite ranking score
     
     class Config:
         from_attributes = True
@@ -83,6 +89,8 @@ class BriefingResponse(BaseModel):
     articles: List[ArticleResponse]
     total_articles: int
     generated_at: datetime
+    freshness_metadata: Optional[Dict[str, Any]] = None  # Freshness metadata per category
+    refresh_triggered: Optional[bool] = None  # Whether refresh was triggered
     
     class Config:
         json_schema_extra = {
