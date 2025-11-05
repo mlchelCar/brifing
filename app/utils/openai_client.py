@@ -13,8 +13,19 @@ logger = logging.getLogger(__name__)
 class OpenAIClient(LLMClient):
     """OpenAI client wrapper with error handling and rate limiting."""
     
-    def __init__(self):
-        self.client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+    def __init__(self, api_key: Optional[str] = None):
+        """
+        Initialize OpenAI client.
+        
+        Args:
+            api_key: Optional API key. If not provided, uses settings.OPENAI_API_KEY
+        """
+        api_key = api_key or settings.OPENAI_API_KEY
+        # Allow initialization without API key (will fail on first request)
+        if api_key:
+            self.client = AsyncOpenAI(api_key=api_key)
+        else:
+            self.client = None
         self.model = settings.OPENAI_MODEL
         self.max_retries = 3
         self.retry_delay = 1  # seconds
@@ -26,6 +37,9 @@ class OpenAIClient(LLMClient):
         max_tokens: Optional[int] = None
     ) -> str:
         """Make a request to OpenAI with retry logic."""
+        if not self.client:
+            raise ValueError("OpenAI client not initialized. API key is required.")
+        
         for attempt in range(self.max_retries):
             try:
                 response = await self.client.chat.completions.create(
@@ -138,13 +152,13 @@ Provide a clear, informative summary that captures the essence of the article.
             # Fallback to description or title
             return description if description else f"News article: {title}"
 
-# Global LLM client instance (for backward compatibility)
-# Uses provider factory to support OpenAI, OpenRouter, or Mock
-# Note: New code should use get_llm_client() from llm_provider
-def _get_openai_client():
-    """Lazy initialization to avoid circular imports."""
-    from app.utils.llm_provider import get_llm_client
-    return get_llm_client()
-
-# Export as openai_client for backward compatibility
-openai_client = _get_openai_client()
+# For backward compatibility, export openai_client
+# Note: This is instantiated at module level, which should be fine
+# as long as we don't import from llm_provider here
+# New code should use get_llm_client() from llm_provider for provider flexibility
+try:
+    openai_client = OpenAIClient()
+except Exception as e:
+    logger.warning(f"Failed to initialize OpenAI client at module level: {e}")
+    # Set to None - will be handled by provider factory
+    openai_client = None
