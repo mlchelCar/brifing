@@ -1,3 +1,14 @@
+![Alt text](img/web1.png)
+![Alt text](img/web2.png)
+![Alt text](img/web3.png)
+
+![Alt text](img/1.jpeg)
+![Alt text](img/2.jpeg)
+![Alt text](img/3.jpeg)
+![Alt text](img/4.jpeg)
+
+
+
 # MorningBrief
 
 **Copyright (c) 2025 Michel Car. All rights reserved.**
