@@ -2,10 +2,10 @@
 ![Alt text](img/web2.png)
 ![Alt text](img/web3.png)
 
-<img src="images/1.jpeg" width="400">
-<img src="images/2.jpeg" width="400">
-<img src="images/3.jpeg" width="400">
-<img src="images/4.jpeg" width="400">
+<img src="img/1.jpeg" width="400">
+<img src="img/2.jpeg" width="400">
+<img src="img/3.jpeg" width="400">
+<img src="img/4.jpeg" width="400">
 
 
 # MorningBrief
